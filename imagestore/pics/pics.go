@@ -44,6 +44,9 @@ func Get(c appengine.Context, id string) (*Pic, error) {
 // Create creates a new image and stores it in the datastore.
 func Create(c appengine.Context, b *blobstore.BlobInfo) (*Pic, error) {
 	if rxSHA1.FindString(b.Filename) == "" {
+		if err := blobstore.Delete(c, b.BlobKey); err != nil {
+			return nil, err
+		}
 		return nil, fmt.Errorf("%s does not match (?i)^[0-9a-f]{40}\\.jpe?g$", b.Filename)
 	}
 	id := strings.ToLower(strings.SplitN(b.Filename, ".", 2)[0])
