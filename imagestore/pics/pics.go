@@ -25,7 +25,7 @@ type Pic struct {
 	URL string            `datastore:"url,noindex"`
 }
 
-// Get gets a pic from the datastore.
+// Get gets an image from the datastore.
 func Get(c appengine.Context, id string) (*Pic, error) {
 	var p Pic
 	k := NewKey(c, strings.ToLower(id))
@@ -41,7 +41,7 @@ func Get(c appengine.Context, id string) (*Pic, error) {
 	}
 }
 
-// Create creates a new pic and stores it in the datastore.
+// Create creates a new image and stores it in the datastore.
 func Create(c appengine.Context, b *blobstore.BlobInfo) (*Pic, error) {
 	if rxSHA1.FindString(b.Filename) == "" {
 		return nil, fmt.Errorf("%s does not match (?i)^[0-9a-f]{40}\\.jpe?g$", b.Filename)
@@ -57,7 +57,7 @@ func Create(c appengine.Context, b *blobstore.BlobInfo) (*Pic, error) {
 			return nil, err
 		}
 	}
-	// Create the new pic
+	// Create the new image
 	p = &Pic{
 		ID:  id,
 		Key: b.BlobKey,
@@ -72,6 +72,7 @@ func Create(c appengine.Context, b *blobstore.BlobInfo) (*Pic, error) {
 	return p, err
 }
 
+// Delete removes an image from both the blobstore and the datastore.
 func (p *Pic) Delete(c appengine.Context) (err error) {
 	if err = blobstore.Delete(c, p.Key); err == nil {
 		err = datastore.Delete(c, NewKey(c, p.ID))
@@ -79,7 +80,7 @@ func (p *Pic) Delete(c appengine.Context) (err error) {
 	return
 }
 
-// NewKey creates a new pic key.
+// NewKey creates a new image key.
 func NewKey(c appengine.Context, id string) *datastore.Key {
 	return datastore.NewKey(c, Kind, id, 0, nil)
 }
