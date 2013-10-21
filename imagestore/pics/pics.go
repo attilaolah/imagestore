@@ -16,7 +16,7 @@ const (
 	Kind = "Pic"
 )
 
-var rxSHA1 = regexp.MustCompile("^[0-9a-f]{40}$")
+var rxSHA1 = regexp.MustCompile("(?i)^[0-9a-f]{40}\\.jpe?g$")
 
 type Pic struct {
 	ID string `datastore:"-"`
@@ -43,11 +43,22 @@ func Get(c appengine.Context, id string) (*Pic, error) {
 
 // Create creates a new pic and stores it in the datastore.
 func Create(c appengine.Context, b *blobstore.BlobInfo) (*Pic, error) {
-	id := strings.ToLower(strings.SplitN(b.Filename, ".", 2)[0])
-	if rxSHA1.FindString(id) == "" {
-		return nil, fmt.Errorf("%s is not a sha1 hash", id)
+	if rxSHA1.FindString(b.Filename) == "" {
+		return nil, fmt.Errorf("%s does not match (?i)^[0-9a-f]{40}\\.jpe?g$", b.Filename)
 	}
-	p := &Pic{
+	id := strings.ToLower(strings.SplitN(b.Filename, ".", 2)[0])
+	// Check for an existing image first
+	p, err := Get(c, id)
+	if err != nil {
+		return nil, err
+	}
+	if p != nil {
+		if err = p.Delete(c); err != nil {
+			return nil, err
+		}
+	}
+	// Create the new pic
+	p = &Pic{
 		ID:  id,
 		Key: b.BlobKey,
 	}
@@ -59,6 +70,13 @@ func Create(c appengine.Context, b *blobstore.BlobInfo) (*Pic, error) {
 	p.URL = url.String()
 	_, err = datastore.Put(c, NewKey(c, id), p)
 	return p, err
+}
+
+func (p *Pic) Delete(c appengine.Context) (err error) {
+	if err = blobstore.Delete(c, p.Key); err == nil {
+		err = datastore.Delete(c, NewKey(c, p.ID))
+	}
+	return
 }
 
 // NewKey creates a new pic key.
