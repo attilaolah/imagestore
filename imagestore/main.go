@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"rgestoreep/api"
+	"imagestore/api"
 )
 
 func init() {

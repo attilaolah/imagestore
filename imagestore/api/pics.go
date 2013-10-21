@@ -25,7 +25,7 @@ func Pics(w http.ResponseWriter, r *http.Request) {
 	}
 	files := blobs["file"]
 	if len(files) == 0 {
-		http.Error(w, "", http.StatusBadRequest)
+		http.Error(w, "no files submitted", http.StatusBadRequest)
 		return
 	}
 	urls := make([]string, len(files))
