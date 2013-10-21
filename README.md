@@ -14,7 +14,7 @@ App Engine][1].
 The idea is that this app can be deployed in a few minutes and be ready for use
 to test other apps. A fair amount of images can easily fit in the free quota.
 
-# Usage
+## Usage
 
 * Make a `GET` request to create an upload session:
 
@@ -37,3 +37,8 @@ argument.
 
 Only filenames of the form `(?i)^[\da-f]{40}\.jpe?g$` are supported. Filenames
 will be converted to the form that matches `^[\da-f]\.jpg$`.
+
+## TODO
+
+* Batch API calls
+* Memcache support
