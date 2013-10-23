@@ -62,9 +62,13 @@ def upload(batch, path=args.path):
         print 'You need to log in.'
         raise LoginRequired(url)
 
-    response = requests.post(url, files=[
-        ('file', (img, open(os.path.join(path, img), 'rb')))
-    for img in batch])
+    while True:
+        response = requests.post(url, files=[
+            ('file', (img, open(os.path.join(path, img), 'rb')))
+        for img in batch])
+        if response.status_code == 202:
+            break
+        print 'Error:', response
 
     for img, url in zip(batch, response.json()):
         if not url:
