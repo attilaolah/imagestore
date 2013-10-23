@@ -16,7 +16,7 @@ skip_files:
 # Hidden files:
 - ^(.*/)?\..*$
 # YAML, Python, CoffeeScript, markdown, shell:
-- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*\.py[co]?$
 - ^(.*/)?.*\.ya?ml$
 - ^(.*/)?.*\.coffee$
 - ^(.*/)?.*\.markdown$
