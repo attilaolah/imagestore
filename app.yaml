@@ -10,6 +10,7 @@ handlers:
   static_files: static/\1.txt
 - url: /.*
   script: _go_app
+  login: admin
 
 skip_files:
 # Hidden files:
