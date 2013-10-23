@@ -14,6 +14,11 @@ App Engine][1].
 The idea is that this app can be deployed in a few minutes and be ready for use
 to test other apps. A fair amount of images can easily fit in the free quota.
 
+Another use case is when an app requires read-only image storage, but image
+management can only be done by an admin. In that case, this code can be a
+drop-in version for the main app, run as a separate version, saving the
+overhead on the main version.
+
 ## Usage
 
 * Make a `GET` request to create an upload session:
@@ -41,4 +46,4 @@ will be converted to the form that matches `^[\da-f]\.jpg$`.
 ## TODO
 
 * Batch API calls
-* Memcache support
+* Memcache support (probably not needed)
